@@ -1,14 +1,40 @@
 {
   "name": "elysia-sms",
   "version": "1.0.50",
+  "author": {
+    "name": "Reza Morsali",
+    "url": "https://github.com/r6m"
+  },
+  "main": "./dist/index.js",
+  "exports": {
+    "bun": "./dist/index.js",
+    "node": "./dist/cjs/index.js",
+    "require": "./dist/cjs/index.js",
+    "import": "./dist/index.js",
+    "default": "./dist/index.js"
+  },
+  "types": "./src/index.ts",
+  "keywords": [
+    "elysia",
+    "kavenegar",
+    "sms"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/index.ts"
+    "dev": "bun run --watch src/index.ts",
+    "release": "npm run build && npm run test && npm publish --access public"
+  },
+  "peerDependencies": {
+    "elysia": ">= 0.8.0-rc.0"
   },
   "dependencies": {
-    "elysia": "latest"
+    "cache-manager": "^5.4.0",
+    "elysia": "latest",
+    "kavenegar": "^1.1.4"
   },
   "devDependencies": {
+    "@types/node": "^20.1.4",
+    "@types/kavenegar": "^1.1.3",
     "bun-types": "latest"
   },
   "module": "src/index.js"
