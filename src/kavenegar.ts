@@ -1,4 +1,5 @@
 import { KavenegarApi, kavenegar } from 'kavenegar';
+import Keyv from 'keyv';
 
 interface VerifyLookUpMessage {
   template: string;
@@ -9,16 +10,10 @@ interface VerifyLookUpMessage {
   receptor: string;
 }
 
-export interface Cache {
-  set(key: string, value: any, ...args: any): Promise<void>;
-  get(key: string): Promise<any>;
-  del(key: string): Promise<void>;
-}
-
 export class KavenegarClient {
   client: kavenegar.KavenegarInstance;
 
-  constructor(private apikey: string, private sandbox: boolean, private cache: Cache | undefined) {
+  constructor(private apikey: string, private sandbox: boolean, private cache: Keyv) {
     this.client = KavenegarApi({ apikey: this.apikey });
   }
 
@@ -35,12 +30,12 @@ export class KavenegarClient {
   };
 
   async sendCode(data: VerifyLookUpMessage) {
-    const code = await this.cache?.get?.(data.receptor);
+    const code = await this.cache.get(data.receptor);
     if (code) {
       throw new Error('phone code already sent');
     }
 
-    await this.cache?.set?.(data.receptor, data.token);
+    await this.cache.set(data.receptor, data.token);
 
     if (this.sandbox) {
       console.log(`[sms] send code: ${data.token} to ${data.receptor}`);
@@ -52,13 +47,13 @@ export class KavenegarClient {
 
   async verifyCode(phone: string, token: string) {
     if (this.sandbox) {
-      console.log(`[sms] check code ${phone} -> ${token}`);
+      console.log(`[sms] verify code ${phone} -> ${token}`);
     }
 
-    const validToken = await this.cache?.get?.(phone);
+    const validToken = await this.cache.get(phone);
 
     if (token === validToken) {
-      await this.cache?.del?.(phone);
+      await this.cache.delete(phone);
     }
 
     return token === validToken;

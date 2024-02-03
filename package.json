@@ -28,9 +28,9 @@
     "elysia": ">= 0.8.0-rc.0"
   },
   "dependencies": {
-    "cache-manager": "^5.4.0",
     "elysia": "latest",
-    "kavenegar": "^1.1.4"
+    "kavenegar": "^1.1.4",
+    "keyv": "^4.5.4"
   },
   "devDependencies": {
     "@types/node": "^20.1.4",
